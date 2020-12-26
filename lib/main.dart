@@ -1,64 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_masked_text/flutter_masked_text.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'dart:convert' as convert;
-import "package:http/http.dart" as http;
+
+import 'forms.dart';
 
 void main() {
   runApp(MyApp());
-}
-
-class FeedbackForm {
-  String title;
-  String value;
-  String category;
-  String member;
-  String payment;
-
-  FeedbackForm(this.title, this.value, this.category, this.member, this.payment);
-
-  factory FeedbackForm.fromJson(dynamic json) {
-    return FeedbackForm("${json['title']}", "${json['value']}",
-        "${json['category']}", "${json['member']}", "${json['payment']}");
-  }
-
-  // Method to make GET parameters.
-  Map toJson() => {
-    'title': title,
-    'value': value,
-    'category': category,
-    'member': member,
-    'payment': payment
-  };
-}
-
-class FormController {
-
-  // Google App Script Web URL.
-  static const String URL = "https://script.google.com/macros/s/AKfycbwEQ8yJ62oCarsrAEB3NRdp2usieK7l_VwWNrdxDIuUZi-8ck88/exec";
-
-  // Success Status Message
-  static const STATUS_SUCCESS = "SUCCESS";
-
-  /// Async function which saves feedback, parses [feedbackForm] parameters
-  /// and sends HTTP GET request on [URL]. On successful response, [callback] is called.
-  void submitForm(
-      FeedbackForm feedbackForm, void Function(String) callback) async {
-    try {
-      await http.post(URL, body: feedbackForm.toJson()).then((response) async {
-        if (response.statusCode == 302) {
-          var url = response.headers['location'];
-          await http.get(url).then((response) {
-            callback(convert.jsonDecode(response.body)['status']);
-          });
-        } else {
-          callback(convert.jsonDecode(response.body)['status']);
-        }
-      });
-    } catch (e) {
-      print(e);
-    }
-  }
 }
 
 class MyApp extends StatelessWidget {
@@ -266,14 +213,47 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   void sendData() {
+    // Show loading Dialog
+    showDialog(
+        barrierDismissible: false,
+        context: context,
+        builder: (BuildContext context){
+          return Dialog(
+              child: Padding(
+                  padding: EdgeInsets.fromLTRB(10, 20, 10, 20),
+                  child:Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children:[
+                        Text("Carregando"),
+                        CircularProgressIndicator(),
+                      ]
+                  )
+              )
+          );
+        });
     FeedbackForm feedbackForm = FeedbackForm(titleController.text, valueController.text, category, member, payment);
     FormController formController = FormController();
     String dialogTitle;
     formController.submitForm(feedbackForm, (String response) {
+      Navigator.of(context).pop();
       print(response);
       if(response == FormController.STATUS_SUCCESS){
+        dialogTitle = "Sucesso";
       } else {
+        dialogTitle = "Houve uma falha no envio!";
       }
+
+      showDialog(context: context, builder: (BuildContext context){
+        return AlertDialog(
+          title: Text(dialogTitle), actions: [
+            FlatButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                child: Text("Fechar"))
+        ],
+        );
+      });
     });
   }
 
