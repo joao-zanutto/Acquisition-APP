@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_masked_text/flutter_masked_text.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:generic/payment.dart';
 
+import 'category.dart';
 import 'forms.dart';
+import 'member.dart';
 
 void main() {
   runApp(MyApp());
@@ -47,157 +49,6 @@ class MyHomePage extends StatefulWidget {
 
   @override
   _MyHomePageState createState() => _MyHomePageState();
-}
-
-class MemberDropdown extends StatefulWidget {
-  MemberDropdown({Key key, @required this.onSonChanged}) : super(key: key);
-  final StringCallback onSonChanged;
-
-  @override
-  MemberDropdownState createState() => MemberDropdownState( onSonChanged: this.onSonChanged);
-}
-
-typedef void StringCallback(String str);
-typedef void IntCallback(int val);
-
-class MemberDropdownState extends State<MemberDropdown> {
-  String member;
-  final StringCallback onSonChanged;
-
-  MemberDropdownState({@required this.onSonChanged}) {
-    _readMember();
-  }
-
-  _readMember() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    setState(() {
-      member = (prefs.getString('member') ?? "Mini");
-      onSonChanged(member);
-    });
-  }
-
-  @override
-  Widget build(BuildContext context) {
-
-    return DropdownButton<String>(
-      isExpanded: true,
-      value: member,
-      icon: Icon(Icons.arrow_downward),
-      iconSize: 24,
-      elevation: 16,
-      //style: TextStyle(color: Colors.green),
-      underline: Container(
-        height: 1,
-        color: Colors.grey,
-      ),
-      onChanged: (String newValue) async {
-        setState(() {
-          member = newValue;
-        });
-        onSonChanged(member);
-        SharedPreferences prefs = await SharedPreferences.getInstance();
-        prefs.setString('member', member);
-      },
-      items: <String>['Mini', 'Fuga', 'Renner', 'Borel', 'Galego', 'Gui', 'Sub', 'Vó', 'Firmino']
-          .map<DropdownMenuItem<String>>((String value) {
-        return DropdownMenuItem<String>(
-          value: value,
-          child: Text(value),
-        );
-      }).toList(),
-    );
-  }
-}
-
-class CategoryDropdown extends StatefulWidget {
-  CategoryDropdown({Key key, @required this.onSonChanged}) : super(key: key);
-  StringCallback onSonChanged;
-
-  @override
-  CategoryDropdownState createState() => CategoryDropdownState( onSonChanged: this.onSonChanged );
-}
-
-class CategoryDropdownState extends State<CategoryDropdown> {
-  String dropdownValue = 'Mercado';
-  StringCallback onSonChanged;
-
-  CategoryDropdownState({@required this.onSonChanged}) {
-    onSonChanged(dropdownValue);
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return DropdownButton<String>(
-      value: dropdownValue,
-      isExpanded: true,
-      icon: Icon(Icons.arrow_downward),
-      iconSize: 24,
-      elevation: 16,
-      //style: TextStyle(color: Colors.green),
-      underline: Container(
-        height: 1,
-        color: Colors.grey,
-      ),
-      onChanged: (String newValue) {
-        setState(() {
-          dropdownValue = newValue;
-          onSonChanged(dropdownValue);
-        });
-      },
-      items: <String>['Mercado', 'Gás', 'Pets']
-          .map<DropdownMenuItem<String>>((String value) {
-        return DropdownMenuItem<String>(
-          value: value,
-          child: Text(value),
-        );
-      }).toList(),
-    );
-  }
-}
-
-class PaymentRadio extends StatefulWidget {
-  PaymentRadio({Key key, @required this.onSonChanged}) : super(key:key);
-  IntCallback onSonChanged;
-
-  @override
-  PaymentRadioState createState() => PaymentRadioState( onSonChanged: this.onSonChanged);
-}
-
-class PaymentRadioState extends State<PaymentRadio> {
-  IntCallback onSonChanged;
-  int _radioValue = 0;
-
-  PaymentRadioState({@required this.onSonChanged}){
-    _radioValue = 0;
-    onSonChanged(_radioValue);
-  }
-
-  void _handleRadioValueChange(int value) {
-    setState(() {
-      _radioValue = value;
-    });
-    onSonChanged(_radioValue);
-  }
-
-  @override
-  Widget build(BuildContext context){
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        Radio(
-          value: 0,
-          groupValue: _radioValue,
-          onChanged: _handleRadioValueChange,
-        ),
-        Text('Cartão da Rep', style: new TextStyle(fontSize: 16.0),),
-        Radio(
-          value: 1,
-          groupValue: _radioValue,
-          onChanged: _handleRadioValueChange,
-        ),
-        Text('Minha Grana', style: new TextStyle(fontSize: 16.0,),)
-    ]);
-  }
 }
 
 class _MyHomePageState extends State<MyHomePage> {
