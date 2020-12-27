@@ -3,17 +3,17 @@ import 'package:flutter/material.dart';
 import 'dart:convert' as convert;
 import "package:http/http.dart" as http;
 
-class FeedbackForm {
+class AcquisitionForm {
   String title;
   String value;
   String category;
   String member;
   String payment;
 
-  FeedbackForm(this.title, this.value, this.category, this.member, this.payment);
+  AcquisitionForm(this.title, this.value, this.category, this.member, this.payment);
 
-  factory FeedbackForm.fromJson(dynamic json) {
-    return FeedbackForm("${json['title']}", "${json['value']}",
+  factory AcquisitionForm.fromJson(dynamic json) {
+    return AcquisitionForm("${json['title']}", "${json['value']}",
         "${json['category']}", "${json['member']}", "${json['payment']}");
   }
 
@@ -38,7 +38,7 @@ class FormController {
   /// Async function which saves feedback, parses [feedbackForm] parameters
   /// and sends HTTP GET request on [URL]. On successful response, [callback] is called.
   void submitForm(
-      FeedbackForm feedbackForm, void Function(String) callback) async {
+      AcquisitionForm feedbackForm, void Function(String) callback) async {
     try {
 
       await http.post(URL, body: feedbackForm.toJson()).then((response) async {

@@ -45,7 +45,7 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   void sendData() {
-    FeedbackForm feedbackForm = FeedbackForm(titleController.text, valueController.text, category, member, payment);
+    AcquisitionForm feedbackForm = AcquisitionForm(titleController.text, valueController.text, category, member, payment);
     FormController formController = FormController();
 
     Dialogs.showLoadingDialog(context);
