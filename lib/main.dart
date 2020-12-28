@@ -45,24 +45,28 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   void sendData() {
-    AcquisitionForm feedbackForm = AcquisitionForm(titleController.text, valueController.text, category, member, payment);
-    FormController formController = FormController();
+    if(_formKey.currentState.validate()) {
+      AcquisitionForm feedbackForm = AcquisitionForm(
+          titleController.text, valueController.text, category, member,
+          payment);
+      FormController formController = FormController();
 
-    Dialogs.showLoadingDialog(context);
+      Dialogs.showLoadingDialog(context);
 
-    formController.submitForm(feedbackForm, (String response) {
-      Dialogs.popDialog(context);
+      formController.submitForm(feedbackForm, (String response) {
+        Dialogs.popDialog(context);
 
-      String resultDialogTitle;
+        String resultDialogTitle;
 
-      if(response == FormController.STATUS_SUCCESS){
-        resultDialogTitle = "Sucesso";
-      } else {
-        resultDialogTitle = "Houve uma falha no envio!";
-      }
+        if (response == FormController.STATUS_SUCCESS) {
+          resultDialogTitle = "Sucesso";
+        } else {
+          resultDialogTitle = "Houve uma falha no envio!";
+        }
 
-      Dialogs.showResultDialog(context, resultDialogTitle);
-    });
+        Dialogs.showResultDialog(context, resultDialogTitle);
+      });
+    }
   }
 
   String title, value, category, member, payment;
@@ -103,6 +107,7 @@ class _MyHomePageState extends State<MyHomePage> {
                         Padding(
                             padding: EdgeInsets.fromLTRB(0, 10, 0, 10), 
                             child: TextFormField(
+                              key: Key("titleField"),
                               decoration: InputDecoration(labelText: "Nome da transação",),
                               validator: emptyStringValidator,
                               controller: titleController,
@@ -111,13 +116,14 @@ class _MyHomePageState extends State<MyHomePage> {
                         Padding(
                             padding: EdgeInsets.fromLTRB(0, 10, 0, 10),
                             child: TextFormField(
+                              key: Key("valueField"),
                               textAlign: TextAlign.right,
                               decoration: InputDecoration(labelText: "Valor da transação"),
                               controller: valueController,
                             )
                         ),
-                        Padding(padding: EdgeInsets.fromLTRB(0, 10, 0, 10), child: CategoryDropdown(onSonChanged: updateCategory)),
-                        Padding(padding: EdgeInsets.fromLTRB(0, 10, 0, 10), child: MemberDropdown(onSonChanged: updateMember)),
+                        Padding(padding: EdgeInsets.fromLTRB(0, 10, 0, 10), child: CategoryDropdown(key: Key("categoryDropdown"), onSonChanged: updateCategory)),
+                        Padding(padding: EdgeInsets.fromLTRB(0, 10, 0, 10), child: MemberDropdown(key: Key("memberDropdown"), onSonChanged: updateMember)),
                         Padding(padding: EdgeInsets.fromLTRB(0, 10, 0, 10), child: PaymentRadio(onSonChanged: updatePayment,)),
                       ]),
                 ))
@@ -125,6 +131,7 @@ class _MyHomePageState extends State<MyHomePage> {
         ),
       ),
       floatingActionButton: FloatingActionButton(
+        key: Key("sendButton"),
         onPressed: sendData,
         tooltip: 'Increment',
         child: Icon(Icons.upload_rounded),

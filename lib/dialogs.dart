@@ -9,6 +9,7 @@ class Dialogs{
         context: context,
         builder: (BuildContext context){
           return Dialog(
+              key: Key("loadingDialog"),
               child: Padding(
                   padding: EdgeInsets.fromLTRB(10, 20, 10, 20),
                   child:Column(
@@ -30,6 +31,7 @@ class Dialogs{
   static showResultDialog(BuildContext context, String resultDialogTitle){
     showDialog(context: context, builder: (BuildContext context){
       return AlertDialog(
+        key: Key("successDialog"),
         title: Text(resultDialogTitle),
         actions: [
           FlatButton(
