@@ -1,16 +1,8 @@
-# generic
+# Acquisition APP
 
-A new Flutter application.
+This is a simple project that aimed to serve as a sample APP to implement flutter_gherkin library and try it out with an application that is simple enough.
 
-## Getting Started
 
-This project is a starting point for a Flutter application.
+## Functionalities description
 
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://flutter.dev/docs/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://flutter.dev/docs/cookbook)
-
-For help getting started with Flutter, view our
-[online documentation](https://flutter.dev/docs), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+This APP provides a form for uploading acquisitions data to a Google Sheet using API. The data that the APP will send to the spreadsheet comprises acquisition data on Republica's 7 Eh Poko acquisitions for simple household products.
